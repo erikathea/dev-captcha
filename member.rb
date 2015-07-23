@@ -112,7 +112,6 @@ class Member < BaseClassMember
         # assignment: (_param, ...)
         _name = name.to_s.split('filter_by_')[1].split('_').compact.flatten
         attributes = _name.select{ |attr| Member.attributes.include?(attr.to_sym) }
-        puts "#{attributes} #{arguments}"
 
         return "Invalid method '#{name}' with arguments #{arguments}" if attributes.length != arguments[0].length
 
