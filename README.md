@@ -1,84 +1,50 @@
-dev-captcha
+forked: dev-captcha
 ===
 
 CAPTCHA for actual programmers against script-kiddies.
 
-Answering the dev-captcha
+Running via Docker
 ---
 
-1. Fork this on Github.
-2. Implement it on your fork.
+1. Build `docker build -t dev-captcha .`
+2. Run `docker run -it dev-captcha`
 
-Guidelines
+Tech Stuff
 ---
 
-Here are the guidelines:
+- developed using `ruby 2.1`
+- gems used: `json` & `curl`
+- `team.json` retrieved via curl and
+- members converted to`Member`object
+- `Member` contains the filtering functions
 
-1. You can use any programming platform (ie. java, php, python, ruby, node.js, c, bash, etc).
-2. Contain the runtime. The checker will not install PHP and Apache on their host machine. Eew! Use tools like docker or vagrant.
-3. Ask questions if there are things that are unclear.
-4. You're not restricted from using external resources like Google and StackOverflow.
-5. Although you're not restricted from using external resources, don't just go copy-and-pasting snippets of code. Take the time to learn it.
-6. Document your code. Explain the how and why.
-
-Part 1: Programs that have inputs
+Filters
 ---
 
-Create a program that reads `team.json`.
+- `self.filter(options)`- the main filtering function
+- Implemented filters:
+..*`self.filter_by_location(location)`
+..*`self.filter_by_age(start, end)`
+- Dynamic filters:
+..* `self.filter_by_name(string)`
+..* `self.filter_by_name_and_location(string, string)`
+..* `self.filter_by_name_and_age(string, int)`
+..* `self.filter_by_name_and_age(string, array[int, int])`
+..* `self.filter_by_location(string)`
+..* `self.filter_by_location_and_name(string, string)`
+..* `self.filter_by_location_and_age(string, int)`
+..* `self.filter_by_location_and_age(string, array[int, int])`
 
-There are a couple of ways to accomplish this, here are some examples:
-- read the file using the platform's standard file io library.
-- create an http server that serves the file and consume the file like an http response.
-- streaming inputs: `$ cat team.json | myprogram.py --`.
-
-Part 2: Useful libraries
+ErrorHandling
 ---
 
-Now that you've read the file, it's now time to parse the file.
+- returns `No method 'search' for class Member` when method is not implemented; only filter_by_* functions are dynamically created
+- returns `Invalid method [method] with arguments [args]` when calling a filter_by_* method with invalid attribute/s
 
-If you check the contents of the file, you'll notice that it's in JSON.
-Parse it so you can use them within the program.
 
-- You don't need to make an O(1) state-machine JSONParser library.
-- `import json`. Just exhibit that you know how to use re-use libraries.
-
-Part 3: Filtering by location
+Todo
 ---
 
-> Functions. :)
+- handling of expressions in dynamic filters
+- write an actual unit test
 
-In this part, you'll be writing a function that filters the members by location.
-
-Here's an example:
-
-```python
-# python
-# // team = parse_json(team.json)
-filter_by_location(team['members'], "PQ")  # You'll write this funtion.
-# [{"name": "blah", "location": "PQ", "age": ..}, ...]  # 
-```
-
-- Your function must return the objects/dictionaries/hashes that matches the location. Not print it!
-
-Part 4: Filtering by age range
----
-
-> More arguments...
-
-In this part, like the one in part 3, you'll be writing a function that filters 
-the members by age range.
-
-```python
-# python
-filter_by_age_range(members, age_from, age_to)
-```
-
-Part 5: Dynamic Filters
----
-
-> Functions are first-class citizens.
-
-In this part, you'll be writing a filter function that uses functions as arguments. That's more than a hint. :)
-
-- You'll be implementing an all-purpose `filter` function.
-- Languages usually have this out-of-the-box. You'll be implementing one here, not use it. >:)
