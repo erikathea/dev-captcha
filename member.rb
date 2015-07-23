@@ -110,10 +110,15 @@ class Member < BaseClassMember
 
         # defines the method parameter
         # assignment: (_param, ...)
-        _name = name.to_s.split('filter_by_')[1].split('_').compact.flatten
-        attributes = _name.select{ |attr| Member.attributes.include?(attr.to_sym) }
+        _name = name.to_s.sub('filter_by_','').sub('_and','').split('_').compact.flatten
+        attributes = _name.select{ |attr|
+          unless Member.attributes.include?(attr.to_sym)
+            return "Invalid method '#{name}' with arguments #{arguments}"
+          else
+            attr
+          end
+        }
 
-        return "Invalid method '#{name}' with arguments #{arguments}" if attributes.length != arguments[0].length
 
         params_names = attributes.map { |param| '_'+param }
         assignment = params_names.join(', ')
